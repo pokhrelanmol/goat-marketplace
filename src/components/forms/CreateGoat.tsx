@@ -1,12 +1,13 @@
+import { Toast } from "flowbite-react";
 import React, { useState } from "react";
 import { useUser } from "../../contexts/userContext";
 import GoatDataServices from "../../services/goats-services";
 interface IForm {
     type: string;
     weight: number;
-
-    price: number;
     location: string;
+    price: number;
+    contact: number;
 }
 const CreateGoat = () => {
     const [formData, setFormData] = useState<IForm>({} as IForm);
@@ -22,7 +23,8 @@ const CreateGoat = () => {
             !formData.location ||
             !formData.price ||
             !formData.type ||
-            !formData.weight
+            !formData.weight ||
+            !formData.contact
         ) {
             alert("all fields are required");
             return;
@@ -32,6 +34,7 @@ const CreateGoat = () => {
                 ...formData,
                 userId: user.id,
             });
+            alert("goat created successfully");
         } catch (error) {
             console.log(error);
         }
@@ -68,6 +71,12 @@ const CreateGoat = () => {
                 name="location"
                 type="text"
                 placeholder="location"
+            />
+            <input
+                onChange={onChange}
+                name="contact"
+                type="number"
+                placeholder="contact"
             />
             <button onClick={() => handleCreateGoat()}>CREATE</button>
         </div>

@@ -11,23 +11,6 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "../../contexts/userContext";
 import { Button, Carousel } from "flowbite-react";
 const Login = () => {
-    const { user, setUser } = useUser();
-    const navigate = useNavigate();
-    useEffect(() => {
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                navigate("/profile");
-                // redirect to homepage
-                setUser({
-                    name: user.displayName as string,
-                    email: user.email as string,
-                    id: user.uid,
-                    image: user.photoURL as string,
-                });
-            }
-        });
-    }, [user]);
-
     const loginWithGoogle = () => {
         signInWithPopup(auth, new GoogleAuthProvider())
             .then((userCred) => {

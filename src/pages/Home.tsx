@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from "react";
-import Logout from "../components/auth/Logout";
+import { useNavigate } from "react-router-dom";
+import GoatCard from "../components/cards/GoatCard";
+import Hero from "../components/layout/Hero";
+import { useUser } from "../contexts/userContext";
+import { auth } from "../firebase-config";
 import GoatDataServices from "../services/goats-services";
-type GoatType = {
+export type GoatType = {
     contact: number;
     image: string;
     location: string;
     price: number;
     type: string;
     weight: number;
-    id: string;
-}[];
+};
 const Home = () => {
-    const [goats, setGoats] = useState<GoatType>([]);
+    const [goats, setGoats] = useState<GoatType[]>([]);
     useEffect(() => {
         fetchGoats();
     }, []);
@@ -20,30 +23,31 @@ const Home = () => {
         setGoats(
             data.docs.map((doc) => ({ ...doc.data(), id: doc.id } as any))
         );
-        // data.docs.map((doc) => {
-        //     console.log(doc.data);
-        //     setGoats([...goats, { ...doc.data(), id: doc.id }] as GoatType);
-        // });
     };
 
     return (
-        <div>
-            {goats.length > 0 &&
-                goats.map((goat) => (
-                    <div>
-                        <p>{goat.type}</p>
-                        <p>{goat.image}</p>
-                        <p>{goat.contact}</p>
-                        <p>{goat.location}</p>
-                        <p>{goat.weight}</p>
-                        <p>{goat.price}</p>
-                        <p>{goat.id}</p>
-                        <br />
-                    </div>
-                ))}
-            {/* homepage */}
-            <Logout />
-        </div>
+        <main className="mt-20">
+            <Hero />
+            {/* cards */}
+            <h1 className="text-center font-semibold text-4xl text-secondaryPink">
+                What's New
+            </h1>
+            <div className="flex mt-5 space-x-10">
+                {goats.length > 0 &&
+                    goats.map((goat) => (
+                        <div className="">
+                            <GoatCard
+                                contact={goat.contact}
+                                price={goat.price}
+                                weight={goat.weight}
+                                location={goat.location}
+                                type={goat.type}
+                                image={goat.image}
+                            />
+                        </div>
+                    ))}
+            </div>
+        </main>
     );
 };
 

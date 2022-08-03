@@ -1,23 +1,57 @@
-import { Avatar } from "flowbite-react";
-import { useState } from "react";
+import userEvent from "@testing-library/user-event";
+import { Avatar, Button, Tooltip } from "flowbite-react";
+import { useEffect, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import { MdKeyboardArrowDown, MdOutlineCancel } from "react-icons/md";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useUser } from "../../contexts/userContext";
+import { auth } from "../../firebase-config";
+import { loginWithGoogle } from "../../services/auth";
 
+const Navlink = ({ to, text }: { to: string; text: string }) => {
+    return (
+        <NavLink
+            to={to}
+            className={({ isActive }) =>
+                `navlink ${isActive ? "text-gray-800" : "text-secondaryPink"}`
+            }
+        >
+            {text}
+        </NavLink>
+    );
+};
 export default function Navbar() {
     const [navbarOpen, setNavbarOpen] = useState(false);
+    const [loading, setloading] = useState(true);
+    const navigate = useNavigate();
+    const { user, setUser } = useUser();
+    useEffect(() => {
+        // unsubscribe is a method to unsubscribe the onStateChange event
+
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+            setloading(false);
+            if (user) {
+                // redirect to homepage
+                setUser({
+                    name: user.displayName as string,
+                    email: user.email as string,
+                    id: user.uid,
+                    image: user.photoURL as string,
+                });
+            }
+        });
+        return unsubscribe;
+    }, []);
     return (
         <>
-            <nav className="relative flex flex-wrap items-center justify-between px-2 py-3 bg-pink-500 mb-3">
+            <nav className="relative flex flex-wrap items-center justify-between px-2 py-3 shadow-md rounded-md mb-3">
                 <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
                     <div className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
-                        <a
-                            className="text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-white"
-                            href="#pablo"
-                        >
-                            pink Tailwind Starter Kit
-                        </a>
+                        <img
+                            onClick={() => navigate("/")}
+                            src="https://flowbite.com/docs/images/logo.svg"
+                            className="w-8 h-8 rounded-full cursor-pointer"
+                        />
                         <button
                             className="text-white cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none"
                             type="button"
@@ -35,37 +69,44 @@ export default function Navbar() {
                             "lg:flex flex-grow items-center" +
                             (navbarOpen ? " flex" : " hidden")
                         }
-                        id="example-navbar-danger"
                     >
-                        <ul className="flex flex-col lg:flex-row list-none lg:ml-auto">
-                            <li className="nav-item">
-                                <a
-                                    className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
-                                    href="#pablo"
-                                >
-                                    <span className="ml-2">Share</span>
-                                </a>
-                            </li>
-                            <li className="nav-item">
-                                <a
-                                    className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
-                                    href="#pablo"
-                                >
-                                    <span className="ml-2">Tweet</span>
-                                </a>
-                            </li>
-                            {/* userprofile */}
-                            <div>
-                                <div className="flex items-center cursor-pointer">
-                                    <Avatar
-                                        img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-                                        rounded={true}
-                                    />
+                        {!loading && (
+                            <ul className="flex flex-col lg:flex-row list-none lg:ml-auto items-center space-x-5">
+                                {user.email ? (
+                                    <>
+                                        {/* userprofile */}
+                                        <Navlink
+                                            to="list-goat"
+                                            text="List Goat"
+                                        />
+                                        <Tooltip
+                                            content="User Profile"
+                                            style="dark"
+                                        >
+                                            <div>
+                                                <div className="flex items-center cursor-pointer">
+                                                    <Avatar
+                                                        img={user.image}
+                                                        rounded={true}
+                                                    />
 
-                                    <span>Hi,Anmol</span>
-                                </div>
-                            </div>
-                        </ul>
+                                                    <span className=" before:content-['Hi,'] text-secondaryPink before:text-gray-600 before:text-xl">
+                                                        {user.name}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </Tooltip>
+                                    </>
+                                ) : (
+                                    <Button
+                                        style={{ backgroundColor: "#F69987" }}
+                                        onClick={loginWithGoogle}
+                                    >
+                                        Login
+                                    </Button>
+                                )}
+                            </ul>
+                        )}
                     </div>
                 </div>
             </nav>
