@@ -1,4 +1,4 @@
-import { db } from "../firebase-config";
+import { db, storage } from "../firebase-config";
 import {
     collection,
     getDocs,
@@ -8,6 +8,12 @@ import {
     updateDoc,
     doc,
 } from "firebase/firestore";
+import {
+    getDownloadURL,
+    ref,
+    uploadBytes,
+    uploadString,
+} from "firebase/storage";
 
 const goatCollectionRef = collection(db, "goats");
 const userCollectionRef = collection(db, "users");
@@ -35,6 +41,19 @@ class GoatDataService {
         const goatDoc = (db, "goats", id);
 
         return getDoc(goatDoc);
+    }
+    // upload image base64 string to firebase storage and return download url
+
+    async uploadImagesBase64(images) {
+        let urls = [];
+        for (let image of images) {
+            const imageRef = ref(storage, "images");
+            const snapshot = await uploadString(imageRef, image.base64);
+            const downloadableUrl = await getDownloadURL(snapshot.ref);
+            urls = [...urls, downloadableUrl];
+        }
+
+        return urls;
     }
 }
 export default new GoatDataService();

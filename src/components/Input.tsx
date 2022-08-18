@@ -8,7 +8,7 @@ interface IInputProps<T> {
     placeholder: string;
     label: string;
     selectOptions?: Array<string | number>;
-    onChange?: () => void;
+    onChange?: T;
 }
 const Input = ({
     register,
@@ -30,12 +30,12 @@ const Input = ({
             </label>
             {type === "select" ? (
                 <select
-                    className="dropdown  "
+                    className="dropdown"
                     onChange={onChange}
                     name={name}
                     {...(register(name), { required: true })}
                 >
-                    <option value={undefined} selected={true} disabled>
+                    <option value="" selected={true} disabled>
                         --select--
                     </option>
                     {selectOptions?.map((name, idx) => (

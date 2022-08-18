@@ -7,7 +7,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import UploadImages from "react-file-base64";
 import Input from "../Input";
 import Button from "../Button";
-import { getConfigFileParsingDiagnostics } from "typescript";
+import { storage } from "../../firebase-config";
 
 interface IForm {
     type: string;
@@ -21,9 +21,10 @@ const CreateGoat = () => {
     const [formData, setFormData] = useState<IForm>({} as IForm);
     const [images, setImages] = useState<Array<string>>([]);
     const { user } = useUser();
+    const [loading, setLoading] = useState(false);
     const phoneRegExp =
         /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
-    const SUPPORTED_IMAGE_FORMAT = ["image/jpg", "image/jpeg", "image/png"];
+
     const scheme = yup.object().shape({
         type: yup
             .string()
@@ -46,14 +47,7 @@ const CreateGoat = () => {
             .matches(phoneRegExp, "Contact must be a valid phone number")
             .min(10, "Contact must be 10 characters")
             .max(10, "Contact must be 10 characters"),
-        images: yup
-            .mixed()
-            .required("Images are required")
-            .test(
-                "file format",
-                "please upload png/jpeg/jpg images only",
-                (value) => value && SUPPORTED_IMAGE_FORMAT.includes(value.type)
-            ),
+        images: yup.array().required("Images are required"),
     });
     const {
         register,
@@ -62,15 +56,24 @@ const CreateGoat = () => {
         setValue,
         handleSubmit,
     } = useForm<IForm>({ resolver: yupResolver(scheme) });
-    const onSumbit = (data: IForm) => {
-        // upload image to firebase storage and get the url and upload to database
 
-        alert(JSON.stringify(data));
+    const onSumbit = (data: IForm) => {
+        setLoading(true);
+        GoatDataServices.uploadImagesBase64(images).then((res) => {
+            const newData = { ...data, images: res, userId: user.id };
+            GoatDataServices.addGoat(newData);
+            reset();
+            setImages([]);
+            setLoading(false);
+        });
     };
     const getFiles = (files: [string]) => {
         setImages([...images, ...files]);
         setValue("images", [...images, ...files]);
     };
+
+    // upload image to firebase storage and get the url and upload to database
+
     return (
         <div className="p-10">
             <h1 className="text-3xl text-center my-5 text-secondaryPink">
@@ -78,7 +81,7 @@ const CreateGoat = () => {
                 Create Goat
             </h1>
             <form
-                onSubmit={handleSubmit(onSumbit)}
+                // onSubmit={handleSubmit(onSumbit)}
                 className="grid grid-cols-1 md:grid-cols-2 gap-5 justify-center items-center "
             >
                 <Input
@@ -89,6 +92,15 @@ const CreateGoat = () => {
                     errors={errors}
                     selectOptions={["Khasi", "Boka", "Baili", "Mou", "Pathi"]}
                     placeholder="Type"
+                    onChange={(
+                        e: React.ChangeEvent<
+                            HTMLInputElement | HTMLSelectElement
+                        >
+                    ) =>
+                        setValue("type", e.target.value, {
+                            shouldValidate: true,
+                        })
+                    }
                 />
                 <Input
                     type="number"
@@ -151,8 +163,13 @@ const CreateGoat = () => {
                 </div>
             </form>
             <div className="text-center my-5">
-                <Button buttonType="pink-filled" type="submit">
-                    Create Goat
+                <Button
+                    buttonType="pink-filled"
+                    type="submit"
+                    onClick={handleSubmit(onSumbit)}
+                    {...(loading ? { disabled: true } : {})}
+                >
+                    {loading ? "uploading..." : "Create Goat"}
                 </Button>
             </div>
         </div>
