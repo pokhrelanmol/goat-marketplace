@@ -46,14 +46,14 @@ export default function Navbar() {
         <>
             <nav className="relative flex flex-wrap items-center justify-between px-2 py-3 shadow-md rounded-md mb-3">
                 <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
-                    <div className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
+                    <div className="w-full relative flex justify-between md:w-auto md:static md:block md:justify-start">
                         <img
                             onClick={() => navigate("/")}
                             src="https://flowbite.com/docs/images/logo.svg"
-                            className="w-8 h-8 rounded-full cursor-pointer"
+                            className="w-8 mb-5 h-8 rounded-full cursor-pointer"
                         />
                         <button
-                            className="text-white cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none"
+                            className="text-secondaryPink cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block md:hidden outline-none focus:outline-none"
                             type="button"
                             onClick={() => setNavbarOpen(!navbarOpen)}
                         >
@@ -66,12 +66,12 @@ export default function Navbar() {
                     </div>
                     <div
                         className={
-                            "lg:flex flex-grow items-center" +
+                            "md:flex  flex-grow items-center" +
                             (navbarOpen ? " flex" : " hidden")
                         }
                     >
                         {!loading && (
-                            <ul className="flex flex-col lg:flex-row list-none lg:ml-auto items-center space-x-5">
+                            <ul className="flex flex-col md:flex-row list-none md:ml-auto items-center space-x-5">
                                 {user.email ? (
                                     <>
                                         {/* userprofile */}

@@ -29,10 +29,10 @@ const Home = () => {
         <main className="mt-20">
             <Hero />
             {/* cards */}
-            <h1 className="text-center font-semibold text-4xl text-secondaryPink">
+            <h1 className="text-center font-semibold text-4xl mb-5 text-secondaryPink">
                 What's New
             </h1>
-            <div className="flex mt-5 space-x-10">
+            <div className="flex flex-wrap justify-center space-y-5 md:space-x-5 md:space-y-0 ">
                 {goats.length > 0 &&
                     goats.map((goat) => (
                         <div className="">

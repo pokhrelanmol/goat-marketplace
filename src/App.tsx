@@ -6,7 +6,7 @@ import Navigation from "./components/layout/Navigation";
 
 function App() {
     return (
-        <div className="App max-w-7xl mx-auto">
+        <div className="App max-w-6xl mx-auto">
             <Navigation />
             <Routes>
                 <Route path="/" element={<Home />} />

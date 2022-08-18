@@ -4,4 +4,23 @@
 .navLink {
     @apply px-3 py-2 flex items-center text-xs uppercase  font-bold leading-snug hover:opacity-75;
 }
+.inputField {
+    @apply border p-2  md:text-sm border-secondaryPink rounded-md text-xs w-full;
+}
+.dropdown {
+    @apply border p-2 border-secondaryPink rounded-md bg-white w-full;
+}
+
+/* Chrome, Safari, Edge, Opera */
+/* hide number incrementor */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
 @tailwind utilities;
