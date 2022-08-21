@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import GoatDataServices from "../../services/goats-services";
+import UserServices from "../../services/user-services";
 import {
     GoogleAuthProvider,
     signInWithPopup,
@@ -9,12 +9,14 @@ import {
 import { auth } from "../../firebase-config";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../contexts/userContext";
-import { Button, Carousel } from "flowbite-react";
+import Button from "../Button";
+import userEvent from "@testing-library/user-event";
 const Login = () => {
+    const { user } = useUser();
     const loginWithGoogle = () => {
         signInWithPopup(auth, new GoogleAuthProvider())
             .then((userCred) => {
-                GoatDataServices.addUser({
+                UserServices.addUser({
                     email: userCred.user.email,
                     name: userCred.user.displayName,
                     id: userCred.user.uid,
@@ -31,9 +33,9 @@ const Login = () => {
     };
     return (
         <div className=" ">
-            <button type="button" className="bg-red-500">
-                Sign in with Google
-            </button>
+            <Button buttonType="pink-filled" onClick={loginWithGoogle}>
+                Login
+            </Button>
         </div>
     );
 };

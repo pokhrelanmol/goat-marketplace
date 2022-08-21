@@ -1,4 +1,4 @@
-import { db, storage } from "../firebase-config";
+import { auth, db, storage } from "../firebase-config";
 import {
     collection,
     getDocs,
@@ -7,6 +7,9 @@ import {
     deleteDoc,
     updateDoc,
     doc,
+    query,
+    where,
+    onSnapshot,
 } from "firebase/firestore";
 import {
     getDownloadURL,
@@ -16,16 +19,12 @@ import {
 } from "firebase/storage";
 
 const goatCollectionRef = collection(db, "goats");
-const userCollectionRef = collection(db, "users");
-class GoatDataService {
+class GoatService {
     addGoat(newGoat) {
         console.log(newGoat);
         return addDoc(goatCollectionRef, newGoat);
     }
-    addUser(newUser) {
-        console.log(newUser);
-        return addDoc(userCollectionRef, newUser);
-    }
+
     deleteGoat(id) {
         const goatDoc = doc(db, "goats", id);
         return deleteDoc(goatDoc);
@@ -35,25 +34,50 @@ class GoatDataService {
         return updateDoc(goatDoc, updatedDoc);
     }
     getGoats() {
-        return getDocs(goatCollectionRef);
+        const allGoats = onSnapshot(query(goatCollectionRef), (snapshot) => {
+            const data = snapshot.docs.map((doc) => ({
+                ...doc.data(),
+                id: doc.id,
+            }));
+            console.log(data);
+            return data;
+        });
+        return allGoats;
     }
     getGoat(id) {
-        const goatDoc = (db, "goats", id);
-
+        const goatDoc = doc(db, "goats", id);
         return getDoc(goatDoc);
     }
+    getUserGoats() {
+        const userId = auth.currentUser.uid;
+        const q = query(
+            collection(db, "goats"),
+            where("userId", "==", `${userId}`)
+        );
+        onSnapshot(q, (snapshot) => {
+            const goats = [];
+            snapshot.docs.map((doc) => {
+                goats.push({ ...doc.data(), id: doc.id });
+            });
+            console.log(goats);
+            return goats;
+        });
+    }
     // upload image base64 string to firebase storage and return download url
-
     async uploadImagesBase64(images) {
         let urls = [];
         for (let image of images) {
-            const imageRef = ref(storage, "images");
-            const snapshot = await uploadString(imageRef, image.base64);
+            const imageRef = ref(storage, `images/${image.name}`);
+            const snapshot = await uploadString(
+                imageRef,
+                image.base64,
+                "data_url"
+            );
             const downloadableUrl = await getDownloadURL(snapshot.ref);
             urls = [...urls, downloadableUrl];
         }
-
+        console.log(urls);
         return urls;
     }
 }
-export default new GoatDataService();
+export default new GoatService();

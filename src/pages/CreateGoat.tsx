@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import { useUser } from "../../contexts/userContext";
-import GoatDataServices from "../../services/goats-services";
+import { useUser } from "../contexts/userContext";
+import GoatDataServices from "../services/goats-services";
+import UserServices from "../services/user-services";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import UploadImages from "react-file-base64";
-import Input from "../Input";
-import Button from "../Button";
-import { storage } from "../../firebase-config";
+import Input from "../components/Input";
+import Button from "../components/Button";
+import { storage } from "../firebase-config";
 
 interface IForm {
     type: string;

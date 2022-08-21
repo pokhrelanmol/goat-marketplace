@@ -4,7 +4,7 @@ import { GoatType } from "../../pages/Home";
 const GoatCard = ({
     type,
     contact,
-    image,
+    images,
     location,
     price,
     weight,
@@ -14,7 +14,7 @@ const GoatCard = ({
             <div className="w-80 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800  cursor-pointer   dark:border-gray-700">
                 <img
                     className="min-w-full rounded-t-lg h-72  mb-3 "
-                    src={image}
+                    src={images[0]}
                     alt=""
                 />
                 <div className="space-y-3 p-3">

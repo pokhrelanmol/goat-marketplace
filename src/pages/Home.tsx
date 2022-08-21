@@ -1,28 +1,44 @@
+import {
+    collection,
+    getDocs,
+    onSnapshot,
+    query,
+    where,
+} from "firebase/firestore";
+import uniqid from "uniqid";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import GoatCard from "../components/cards/GoatCard";
 import Hero from "../components/layout/Hero";
 import { useUser } from "../contexts/userContext";
-import { auth } from "../firebase-config";
+import { auth, db } from "../firebase-config";
 import GoatDataServices from "../services/goats-services";
 export type GoatType = {
     contact: number;
-    image: string;
+    images: string[];
     location: string;
     price: number;
     type: string;
     weight: number;
+    id: string;
 };
 const Home = () => {
+    const { user, setUser } = useUser();
     const [goats, setGoats] = useState<GoatType[]>([]);
     useEffect(() => {
-        fetchGoats();
+        fetchAllGoats();
     }, []);
-    const fetchGoats = async () => {
-        const data = await GoatDataServices.getGoats();
-        setGoats(
-            data.docs.map((doc) => ({ ...doc.data(), id: doc.id } as any))
-        );
+    //@dev:gettting all the goats from the database
+    // @dev :onSnapshot is a listener that will listen to the database and update the state whenever there is a change
+    const goatCollectionRef = collection(db, "goats");
+    const fetchAllGoats = () => {
+        onSnapshot(query(goatCollectionRef), (snapshot) => {
+            const data = snapshot.docs.map((doc) => ({
+                ...doc.data(),
+                id: doc.id,
+            }));
+            setGoats(data as unknown as GoatType[]);
+        });
     };
 
     return (
@@ -35,14 +51,15 @@ const Home = () => {
             <div className="flex flex-wrap justify-center space-y-5 md:space-x-5 md:space-y-0 ">
                 {goats.length > 0 &&
                     goats.map((goat) => (
-                        <div className="">
+                        <div className="" key={uniqid()}>
                             <GoatCard
                                 contact={goat.contact}
                                 price={goat.price}
                                 weight={goat.weight}
                                 location={goat.location}
                                 type={goat.type}
-                                image={goat.image}
+                                images={goat.images}
+                                id={goat.id}
                             />
                         </div>
                     ))}

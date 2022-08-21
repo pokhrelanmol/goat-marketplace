@@ -24,10 +24,10 @@ const Button = ({
             : buttonType === "pink-outline"
             ? "bg-transparent hover:bg-secondaryPink hover:text-white border border-secondaryPink focus:ring-red-50 text-secondaryPink"
             : buttonType === "dark-filled"
-            ? "bg-secondaryDark hover:bg-white hover:text-secondaryDark border border-secondaryDark focus:ring-red-50 text-white"
+            ? "bg-primaryDark hover:bg-white hover:text-primaryDark border border-primaryDark focus:ring-red-50 text-white"
             : buttonType === "dark-outline"
-            ? "bg-transparent hover:bg-secondaryDark hover:text-white border border-secondaryDark focus:ring-red-50 text-secondaryDark"
-            : "bg-secondaryPink hover:bg-white hover:text-secondaryPink border border-secondaryPink focus:ring-red-50 text-white";
+            ? "bg-transparent hover:bg-secondaryDark hover:text-white border border-primaryDark focus:ring-red-50 text-primaryDark"
+            : "bg-secondaryPink hover:bg-white hover:text-secondaryPink border border-primaryDark focus:ring-red-50 text-white";
     return (
         <button
             className={` ${buttonStyle}

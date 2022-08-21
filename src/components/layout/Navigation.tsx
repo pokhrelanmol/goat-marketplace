@@ -3,10 +3,10 @@ import { Avatar, Button, Tooltip } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import { MdKeyboardArrowDown, MdOutlineCancel } from "react-icons/md";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useUser } from "../../contexts/userContext";
 import { auth } from "../../firebase-config";
-import { loginWithGoogle } from "../../services/auth";
+import Login from "../auth/Login";
 
 const Navlink = ({ to, text }: { to: string; text: string }) => {
     return (
@@ -46,7 +46,10 @@ export default function Navbar() {
         <>
             <nav className="relative flex flex-wrap items-center justify-between px-2 py-3 shadow-md rounded-md mb-3">
                 <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
-                    <div className="w-full relative flex justify-between md:w-auto md:static md:block md:justify-start">
+                    <div
+                        onClick={() => setNavbarOpen(!navbarOpen)}
+                        className="w-full relative flex justify-between md:w-auto md:static md:block md:justify-start"
+                    >
                         <img
                             onClick={() => navigate("/")}
                             src="https://flowbite.com/docs/images/logo.svg"
@@ -75,15 +78,23 @@ export default function Navbar() {
                                 {user.email ? (
                                     <>
                                         {/* userprofile */}
-                                        <Navlink
-                                            to="list-goat"
-                                            text="List Goat"
-                                        />
+                                        <p onClick={() => setNavbarOpen(false)}>
+                                            <Navlink
+                                                to="list-goat"
+                                                text="List Goat"
+                                            />
+                                        </p>
+
                                         <Tooltip
-                                            content="User Profile"
+                                            content="User Dashboard"
                                             style="dark"
                                         >
-                                            <div>
+                                            <Link
+                                                to="/dashboard"
+                                                onClick={() =>
+                                                    setNavbarOpen(false)
+                                                }
+                                            >
                                                 <div className="flex items-center cursor-pointer">
                                                     <Avatar
                                                         img={user.image}
@@ -94,16 +105,11 @@ export default function Navbar() {
                                                         {user.name}
                                                     </span>
                                                 </div>
-                                            </div>
+                                            </Link>
                                         </Tooltip>
                                     </>
                                 ) : (
-                                    <Button
-                                        style={{ backgroundColor: "#F69987" }}
-                                        onClick={loginWithGoogle}
-                                    >
-                                        Login
-                                    </Button>
+                                    <Login />
                                 )}
                             </ul>
                         )}
