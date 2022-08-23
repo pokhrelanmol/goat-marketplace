@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import { UserProvider } from "./contexts/userContext";
+import { DashboardContextProvider } from "./contexts/dashboardContext/DashboardContext";
 
 const root = ReactDOM.createRoot(
     document.getElementById("root") as HTMLElement
@@ -12,7 +13,9 @@ root.render(
     <React.StrictMode>
         <BrowserRouter>
             <UserProvider>
-                <App />
+                <DashboardContextProvider>
+                    <App />
+                </DashboardContextProvider>
             </UserProvider>
         </BrowserRouter>
     </React.StrictMode>

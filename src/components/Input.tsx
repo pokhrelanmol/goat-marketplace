@@ -1,4 +1,5 @@
 import React from "react";
+import { GoatType } from "../pages/Home";
 
 interface IInputProps<T> {
     register: T;
@@ -7,6 +8,8 @@ interface IInputProps<T> {
     type: string;
     placeholder: string;
     label: string;
+    value?: GoatType;
+    defaultValue?: string | number;
     selectOptions?: Array<string | number>;
     onChange?: T;
 }
@@ -19,6 +22,8 @@ const Input = ({
     selectOptions,
     label,
     onChange,
+    value,
+    defaultValue,
 }: IInputProps<any>) => {
     return (
         <div className="">
@@ -34,22 +39,25 @@ const Input = ({
                     onChange={onChange}
                     name={name}
                     {...(register(name), { required: true })}
+                    defaultValue={selectOptions?.find(
+                        (name) => name === defaultValue
+                    )}
                 >
                     <option value="" selected={true} disabled>
                         --select--
                     </option>
                     {selectOptions?.map((name, idx) => (
-                        <option key={idx} value={name}>
-                            {name}
-                        </option>
+                        <option value={name}>{name}</option>
                     ))}
                 </select>
             ) : (
                 <input
                     {...register(name)}
+                    value={value?.weight || register.value}
                     type={type}
                     className="inputField"
                     placeholder={placeholder}
+                    defaultValue={defaultValue}
                 />
             )}
             <p className="text-red-600">

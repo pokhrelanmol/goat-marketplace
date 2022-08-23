@@ -6,6 +6,7 @@ import Navigation from "./components/layout/Navigation";
 import Dashboard from "./pages/Dashboard";
 import { useUser } from "./contexts/userContext";
 import _404 from "./pages/_404";
+import ImageUpload from "./components/ImageUpload";
 
 function App() {
     const { user } = useUser();

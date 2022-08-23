@@ -5,22 +5,18 @@ import { useUser } from "../contexts/userContext";
 import { db } from "../firebase-config";
 import uniqid from "uniqid";
 import Button from "../components/Button";
-import {
-    initialState,
-    profileReducer,
-} from "../reducers/profileReducer/profileReducer";
-import { actionTypes } from "../reducers/profileReducer/profileReducer";
-import { GoatType } from "./Home";
+
 import Logout from "../components/auth/Logout";
-import UserGoatsCard from "../components/cards/UserGoatsCard";
-import Input from "../components/Input";
+import { useDashboard } from "../contexts/dashboardContext/DashboardContext";
+import { actionTypes } from "../contexts/dashboardContext/types";
 import EditGoatModal from "../components/modals/EditGoatModal";
+import UserGoatsCard from "../components/cards/UserGoatsCard";
+import { GoatType } from "./Home";
 
 const Dashboard = () => {
     const { user } = useUser();
     const [showModal, setShowModal] = useState(false);
-    const [state, dispatch] = useReducer(profileReducer, initialState);
-
+    const { state, dispatch } = useDashboard();
     useEffect(() => {
         const goatsCollectionRef = collection(db, "goats");
         onSnapshot(
@@ -38,7 +34,8 @@ const Dashboard = () => {
         );
     }, [user.id]);
     const handleEdit = (id: string) => {
-        console.log("clicked  " + id);
+        setShowModal(true);
+        dispatch({ type: actionTypes.EDIT_GOAT, payload: { id } });
     };
     const handleDelete = (id: string) => {};
     return (
@@ -74,22 +71,23 @@ const Dashboard = () => {
             {/* user listed goats */}
             <section className=" h-screen md:overflow-hidden overflow-auto md:hover:overflow-auto ">
                 <div className="grid md:grid-cols-2 justify-center items-center lg:grid-cols-3 gap-10 ">
-                    {state.length > 0 &&
-                        state.map((goat) => (
-                            <div className="" key={uniqid()}>
-                                <UserGoatsCard
-                                    contact={goat.contact}
-                                    price={goat.price}
-                                    weight={goat.weight}
-                                    location={goat.location}
-                                    type={goat.type}
-                                    images={goat.images}
-                                    id={goat.id}
-                                    handleEdit={() => handleEdit(goat.id)}
-                                    handleDelete={() => handleDelete(goat.id)}
-                                />
-                            </div>
-                        ))}
+                    {/* return goat component passing props and with optional chainining */}
+                    {state?.goats?.length
+                        ? state.goats.map((goat) => (
+                              <UserGoatsCard
+                                  contact={goat.contact}
+                                  location={goat.location}
+                                  type={goat.type}
+                                  images={goat.images}
+                                  id={goat.id}
+                                  price={goat.price}
+                                  weight={goat.weight}
+                                  key={uniqid()}
+                                  handleDelete={() => handleDelete(goat.id)}
+                                  handleEdit={() => handleEdit(goat.id)}
+                              />
+                          ))
+                        : null}
                 </div>
             </section>
         </div>

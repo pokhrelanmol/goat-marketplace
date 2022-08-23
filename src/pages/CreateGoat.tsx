@@ -1,16 +1,14 @@
 import React, { useState } from "react";
 import { useUser } from "../contexts/userContext";
 import GoatDataServices from "../services/goats-services";
-import UserServices from "../services/user-services";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import UploadImages from "react-file-base64";
 import Input from "../components/Input";
 import Button from "../components/Button";
-import { storage } from "../firebase-config";
+import ImageUpload from "../components/ImageUpload";
 
-interface IForm {
+export interface IForm {
     type: string;
     weight: number;
     location: string;
@@ -18,62 +16,54 @@ interface IForm {
     contact: number;
     images: string[];
 }
+const phoneRegExp =
+    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+
+export const scheme = yup.object().shape({
+    type: yup
+        .string()
+        .required("Type is required")
+        .min(3, "Type must be at least 3 characters")
+        .max(20, "Type must be less than 20 characters"),
+    weight: yup
+        .number()
+        .required("Weight is required")
+        .min(5, "Weight must be at least 5"),
+    location: yup
+        .string()
+        .required("Location is required")
+        .min(3, "Location must be at least 3 characters")
+        .max(20, "Location must be less than 20 characters"),
+    price: yup.number().required("Price is required"),
+    contact: yup
+        .string()
+        .required("Contact is required")
+        .matches(phoneRegExp, "Contact must be a valid phone number")
+        .min(10, "Contact must be 10 characters")
+        .max(10, "Contact must be 10 characters"),
+    images: yup.array().required("Images are required"),
+});
+
 const CreateGoat = () => {
-    const [formData, setFormData] = useState<IForm>({} as IForm);
-    const [images, setImages] = useState<Array<string>>([]);
     const { user } = useUser();
     const [loading, setLoading] = useState(false);
-    const phoneRegExp =
-        /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
-
-    const scheme = yup.object().shape({
-        type: yup
-            .string()
-            .required("Type is required")
-            .min(3, "Type must be at least 3 characters")
-            .max(20, "Type must be less than 20 characters"),
-        weight: yup
-            .number()
-            .required("Weight is required")
-            .min(5, "Weight must be at least 5"),
-        location: yup
-            .string()
-            .required("Location is required")
-            .min(3, "Location must be at least 3 characters")
-            .max(20, "Location must be less than 20 characters"),
-        price: yup.number().required("Price is required"),
-        contact: yup
-            .string()
-            .required("Contact is required")
-            .matches(phoneRegExp, "Contact must be a valid phone number")
-            .min(10, "Contact must be 10 characters")
-            .max(10, "Contact must be 10 characters"),
-        images: yup.array().required("Images are required"),
-    });
     const {
         register,
         formState: { errors },
         reset,
         setValue,
         handleSubmit,
-    } = useForm<IForm>({ resolver: yupResolver(scheme) });
+    } = useForm<IForm>({ resolver: yupResolver(scheme), mode: "onBlur" });
 
     const onSumbit = (data: IForm) => {
         setLoading(true);
-        GoatDataServices.uploadImagesBase64(images).then((res) => {
+        GoatDataServices.uploadImagesBase64(data.images).then((res) => {
             const newData = { ...data, images: res, userId: user.id };
             GoatDataServices.addGoat(newData);
             reset();
-            setImages([]);
             setLoading(false);
         });
     };
-    const getFiles = (files: [string]) => {
-        setImages([...images, ...files]);
-        setValue("images", [...images, ...files]);
-    };
-
-    // upload image to firebase storage and get the url and upload to database
 
     return (
         <div className="p-10">
@@ -143,24 +133,11 @@ const CreateGoat = () => {
                     >
                         Images
                     </label>
-                    <UploadImages
-                        multiple={true}
-                        {...register("images")}
-                        onDone={(files: [string]) => getFiles(files)}
+                    <ImageUpload
+                        loading={loading}
+                        setValue={setValue}
+                        errors={errors}
                     />
-                    {images.length > 0 ? (
-                        <div className="flex">
-                            {images.map((image: any, index: number) => (
-                                <img
-                                    key={index}
-                                    src={image.base64}
-                                    alt="image"
-                                    className="w-20 h-20 ml-2 rounded-lg"
-                                />
-                            ))}
-                        </div>
-                    ) : null}
-                    <p className="text-red-600">{errors.images?.message}</p>
                 </div>
             </form>
             <div className="text-center my-5">

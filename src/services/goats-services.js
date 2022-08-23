@@ -70,7 +70,7 @@ class GoatService {
             const imageRef = ref(storage, `images/${image.name}`);
             const snapshot = await uploadString(
                 imageRef,
-                image.base64,
+                image.dataURL,
                 "data_url"
             );
             const downloadableUrl = await getDownloadURL(snapshot.ref);
