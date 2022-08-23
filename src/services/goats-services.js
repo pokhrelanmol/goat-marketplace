@@ -1,4 +1,5 @@
 import { auth, db, storage } from "../firebase-config";
+
 import {
     collection,
     getDocs,
@@ -11,6 +12,7 @@ import {
     where,
     onSnapshot,
 } from "firebase/firestore";
+
 import {
     getDownloadURL,
     ref,
@@ -39,6 +41,7 @@ class GoatService {
                 ...doc.data(),
                 id: doc.id,
             }));
+
             console.log(data);
             return data;
         });
@@ -67,6 +70,7 @@ class GoatService {
     async uploadImagesBase64(images) {
         let urls = [];
         for (let image of images) {
+            console.log(image);
             const imageRef = ref(storage, `images/${image.name}`);
             const snapshot = await uploadString(
                 imageRef,
@@ -76,7 +80,6 @@ class GoatService {
             const downloadableUrl = await getDownloadURL(snapshot.ref);
             urls = [...urls, downloadableUrl];
         }
-        console.log(urls);
         return urls;
     }
 }

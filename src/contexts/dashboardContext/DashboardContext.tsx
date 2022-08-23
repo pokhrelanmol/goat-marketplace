@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import { GoatType } from "../../pages/Home";
 import { createContext } from "react";
 import { Actions, actionTypes, DashboardContextType, IState } from "./types";
+import { storage } from "../../firebase-config";
+import { ref, StorageReference } from "firebase/storage";
 
 const initialState: IState = {
     goats: [],
@@ -12,6 +14,7 @@ export const reducer = (state: IState, action: Actions): IState => {
     switch (action.type) {
         case actionTypes.FETCH_USER_GOATS:
             console.log(action.payload);
+
             return { ...state, goats: [...action.payload] };
         case actionTypes.EDIT_GOAT:
             return {

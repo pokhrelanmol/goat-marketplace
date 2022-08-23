@@ -2,19 +2,19 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Tooltip } from "flowbite-react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-
+import { useNavigate } from "react-router-dom";
 import { MdCancel } from "react-icons/md";
-import { ImageListType } from "react-images-uploading";
 import { useDashboard } from "../../contexts/dashboardContext/DashboardContext";
-import CreateGoat, { IForm, scheme } from "../../pages/CreateGoat";
-import { GoatType } from "../../pages/Home";
-import ImageUpload from "../ImageUpload";
+import { IForm, scheme } from "../../pages/CreateGoat";
+import goatsServices from "../../services/goats-services";
+import Button from "../Button";
 import Input from "../Input";
 interface EditModalProps {
     showModal: boolean;
     setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const EditGoatModal = ({ showModal, setShowModal }: EditModalProps) => {
+    const navigate = useNavigate();
     const { state, dispatch } = useDashboard();
     const [loading, setLoading] = useState(false);
     const {
@@ -23,21 +23,38 @@ const EditGoatModal = ({ showModal, setShowModal }: EditModalProps) => {
         reset,
         setValue,
         handleSubmit,
-    } = useForm<IForm>({ resolver: yupResolver(scheme), mode: "onBlur" });
+    } = useForm<IForm>({
+        resolver: yupResolver(scheme),
+        mode: "onBlur",
+        defaultValues: {
+            type: state.goatToEdit.type,
+            weight: state.goatToEdit.weight,
+            location: state.goatToEdit.location,
+            price: state.goatToEdit.price,
+            contact: state.goatToEdit.contact,
+            images: state.goatToEdit.images,
+        },
+    });
 
-    const onSumbit = (data: IForm) => {
+    const onSumbit = handleSubmit((data: IForm) => {
         setLoading(true);
-        // GoatDataServices.uploadImagesBase64(images).then((res) => {
-        //     const newData = { ...data, images: res, userId: user.id };
-        //     GoatDataServices.addGoat(newData);
-        //     reset();
-        //     setImages([]);
-        //     setLoading(false);
-        // });
-    };
+        goatsServices
+            .updateGoat(state.goatToEdit.id, data)
+            .then((res) => {
+                setLoading(false);
+                navigate("/");
+                reset();
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    });
     return (
         <div>
-            <div className="justify-center  bg-gray-50 bg-opacity-60  overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+            <form
+                onSubmit={onSumbit}
+                className="justify-center  bg-gray-50 bg-opacity-60  overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+            >
                 <div className="relative w-auto my-6 mx-auto max-w-3xl">
                     {/*content*/}
                     <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
@@ -46,14 +63,6 @@ const EditGoatModal = ({ showModal, setShowModal }: EditModalProps) => {
                             <h3 className="text-3xl font-semibold text-center">
                                 Modal Title
                             </h3>
-                            <button
-                                className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                                onClick={() => setShowModal(false)}
-                            >
-                                <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
-                                    ×
-                                </span>
-                            </button>
                         </div>
                         {/*body*/}
                         <div className="p-10">
@@ -119,17 +128,13 @@ const EditGoatModal = ({ showModal, setShowModal }: EditModalProps) => {
                                 placeholder="Location"
                                 defaultValue={state.goatToEdit.location}
                             />
-                            {/* images */}
-                            <ImageUpload
-                                setValue={setValue}
-                                errors={errors}
-                                loading={loading}
-                                defaultImages={
-                                    state.goatToEdit
-                                        .images as unknown as ImageListType
-                                }
-                            />
+                            <p className="text-red-600 text-sm">
+                                NOTE: Images cannot be updated if you want to
+                                update image then you have to delete and
+                                recreate posts
+                            </p>
 
+                            {/* images cannot d */}
                             {/* add other input fields */}
                         </div>
                         {/*footer*/}
@@ -143,17 +148,13 @@ const EditGoatModal = ({ showModal, setShowModal }: EditModalProps) => {
                                     <MdCancel className="text-3xl" />
                                 </Tooltip>
                             </button>
-                            <button
-                                className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                                type="button"
-                                onClick={() => setShowModal(false)}
-                            >
-                                Save Changes
-                            </button>
+                            <Button buttonType="pink-outline" type="submit">
+                                {loading ? "Updating..." : "Update"}
+                            </Button>
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
             <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
         </div>
     );
