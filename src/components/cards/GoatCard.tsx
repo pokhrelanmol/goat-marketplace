@@ -11,9 +11,9 @@ const GoatCard = ({
 }: GoatType) => {
     return (
         <div className="">
-            <div className="w-80 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800  cursor-pointer   dark:border-gray-700">
+            <div className="w-80 p-3 bg-white rounded-lg border border-gray-200 shadow-md cursor-pointer  ">
                 <img
-                    className="min-w-full rounded-t-lg h-72  mb-3 "
+                    className="min-w-full h-72 rounded-t-lg mb-3 "
                     src={images[0]}
                     alt=""
                 />

@@ -1,17 +1,16 @@
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import React, { useEffect, useReducer, useState } from "react";
-import GoatCard from "../components/cards/GoatCard";
 import { useUser } from "../contexts/userContext";
 import { db } from "../firebase-config";
 import uniqid from "uniqid";
 import Button from "../components/Button";
-
 import Logout from "../components/auth/Logout";
 import { useDashboard } from "../contexts/dashboardContext/DashboardContext";
 import { actionTypes } from "../contexts/dashboardContext/types";
 import EditGoatModal from "../components/modals/EditGoatModal";
 import UserGoatsCard from "../components/cards/UserGoatsCard";
 import { GoatType } from "./Home";
+import CircularLoader from "../components/CircularLoader";
 
 const Dashboard = () => {
     const { user } = useUser();
@@ -19,6 +18,7 @@ const Dashboard = () => {
     const { state, dispatch } = useDashboard();
     useEffect(() => {
         const goatsCollectionRef = collection(db, "goats");
+        dispatch({ type: actionTypes.SET_LOADING, payload: true });
         onSnapshot(
             query(goatsCollectionRef, where("userId", "==", `${user.id}`)),
             (snapshot) => {
@@ -30,16 +30,21 @@ const Dashboard = () => {
                     type: actionTypes.FETCH_USER_GOATS,
                     payload: data as unknown as GoatType[],
                 });
+                dispatch({ type: actionTypes.SET_LOADING, payload: false });
             }
         );
     }, [user.id]);
+
     const handleEdit = (id: string) => {
         setShowModal(true);
         dispatch({ type: actionTypes.EDIT_GOAT, payload: { id } });
     };
-    const handleDelete = (id: string) => {};
+
+    const handleDelete = (id: string) => {
+        dispatch({ type: actionTypes.DELETE_GOAT, payload: { id } });
+    };
     return (
-        <div className=" md:flex justify-between  mt-10 ">
+        <div className=" md:flex  justify-between  mt-10 ">
             {showModal && (
                 <EditGoatModal
                     showModal={showModal}
@@ -48,7 +53,7 @@ const Dashboard = () => {
             )}
             <section className="mb-10 md:mb-0">
                 <div className="bg-gray-100  p-10 rounded-lg space-y-3 shadow-md grid place-items-center">
-                    <img src={user.image} className="rounded-full" />
+                    <img src={user.image} className="rounded-full w-50 h-50" />
                     <p className="capitalize font-bold before:content-['Name-']  before:text-primaryDark text-gray-400">
                         {user.name}
                     </p>
@@ -69,7 +74,8 @@ const Dashboard = () => {
                 </div>
             </section>
             {/* user listed goats */}
-            <section className=" h-screen md:overflow-hidden overflow-auto md:hover:overflow-auto ">
+            <section className="max-h-screen md:overflow-hidden overflow-auto md:hover:overflow-auto ">
+                {state.loading && <CircularLoader />}
                 <div className="grid md:grid-cols-2 justify-center items-center lg:grid-cols-3 gap-10 ">
                     {/* return goat component passing props and with optional chainining */}
                     {state?.goats?.length

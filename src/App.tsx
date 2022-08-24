@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import { useUser } from "./contexts/userContext";
 import _404 from "./pages/_404";
 import ImageUpload from "./components/ImageUpload";
+import { auth } from "./firebase-config";
 
 function App() {
     const { user } = useUser();
@@ -16,7 +17,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/list-goat" element={<CreateGoat />} />
-                {user.email && (
+                {auth.currentUser && (
                     <Route path="/dashboard" element={<Dashboard />} />
                 )}
                 {/* 404 routes */}

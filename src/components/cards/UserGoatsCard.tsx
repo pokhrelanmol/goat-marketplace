@@ -21,9 +21,9 @@ const UserGoatsCard = ({
     return (
         <div>
             <div className="">
-                <div className="w-52 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800  cursor-pointer   dark:border-gray-700">
+                <div className="w-52 p-5 max-h-72 overflow-y-scroll bg-white rounded-lg border border-gray-200 shadow-md   cursor-pointer">
                     <img
-                        className="w-full rounded-t-lg h-50  mb-3 "
+                        className="w-50 rounded-t-lg h-50  mb-3 "
                         src={images[0]}
                         alt=""
                     />
@@ -47,12 +47,15 @@ const UserGoatsCard = ({
                         <div className="flex justify-between">
                             <Tooltip content="Edit">
                                 <MdEdit
-                                    className="w-5 h-5 text-yellow-600 rounded-full"
+                                    className="w-7 h-7 bg-gray-100 shadow-md p-2 text-yellow-600 rounded-full"
                                     onClick={handleEdit}
                                 />
                             </Tooltip>
                             <Tooltip content="Remove">
-                                <MdDelete className="w-5 h-5 text-red-600 rounded-full" />
+                                <MdDelete
+                                    onClick={handleDelete}
+                                    className="w-7 h-7 p-2 bg-gray-100 shadow-md text-red-600 rounded-full"
+                                />
                             </Tooltip>
                         </div>
                     </div>

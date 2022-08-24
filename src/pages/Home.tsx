@@ -32,13 +32,16 @@ const Home = () => {
     // @dev :onSnapshot is a listener that will listen to the database and update the state whenever there is a change
     const goatCollectionRef = collection(db, "goats");
     const fetchAllGoats = () => {
-        onSnapshot(query(goatCollectionRef), (snapshot) => {
-            const data = snapshot.docs.map((doc) => ({
-                ...doc.data(),
-                id: doc.id,
-            }));
-            setGoats(data as unknown as GoatType[]);
-        });
+        onSnapshot(
+            query(goatCollectionRef, where("userId", "!=", `${user.id}`)),
+            (snapshot) => {
+                const data = snapshot.docs.map((doc) => ({
+                    ...doc.data(),
+                    id: doc.id,
+                }));
+                setGoats(data as unknown as GoatType[]);
+            }
+        );
     };
 
     return (
@@ -48,7 +51,7 @@ const Home = () => {
             <h1 className="text-center font-semibold text-4xl mb-5 text-secondaryPink">
                 What's New
             </h1>
-            <div className="flex flex-wrap justify-center space-y-5 md:space-x-5 md:space-y-0 ">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 justify-center items-center space-y-5  ">
                 {goats.length > 0 &&
                     goats.map((goat) => (
                         <div className="" key={uniqid()}>

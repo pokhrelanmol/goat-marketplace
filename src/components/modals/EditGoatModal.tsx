@@ -60,8 +60,8 @@ const EditGoatModal = ({ showModal, setShowModal }: EditModalProps) => {
                     <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                         {/*header*/}
                         <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                            <h3 className="text-3xl font-semibold text-center">
-                                Modal Title
+                            <h3 className="text-3xl font-semibold ">
+                                Update Goat
                             </h3>
                         </div>
                         {/*body*/}
@@ -138,7 +138,7 @@ const EditGoatModal = ({ showModal, setShowModal }: EditModalProps) => {
                             {/* add other input fields */}
                         </div>
                         {/*footer*/}
-                        <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
+                        <div className="flex items-center justify-center p-6 border-t border-solid border-slate-200 rounded-b">
                             <button
                                 className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none  ease-linear transition-all duration-150 absolute top-1 right-1"
                                 type="button"

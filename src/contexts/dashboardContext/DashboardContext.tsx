@@ -2,20 +2,21 @@ import React, { useEffect } from "react";
 import { GoatType } from "../../pages/Home";
 import { createContext } from "react";
 import { Actions, actionTypes, DashboardContextType, IState } from "./types";
-import { storage } from "../../firebase-config";
-import { ref, StorageReference } from "firebase/storage";
+
+import goatsServices from "../../services/goats-services";
 
 const initialState: IState = {
     goats: [],
     goatToEdit: {} as GoatType,
+    loading: false,
 };
 
 export const reducer = (state: IState, action: Actions): IState => {
     switch (action.type) {
         case actionTypes.FETCH_USER_GOATS:
-            console.log(action.payload);
-
             return { ...state, goats: [...action.payload] };
+        case actionTypes.SET_LOADING:
+            return { ...state, loading: action.payload };
         case actionTypes.EDIT_GOAT:
             return {
                 ...state,
@@ -23,6 +24,11 @@ export const reducer = (state: IState, action: Actions): IState => {
                     (goat) => goat.id === action.payload.id
                 ) as GoatType,
             };
+        case actionTypes.DELETE_GOAT:
+            goatsServices.deleteGoat(action.payload.id).then((data) => {
+                console.log("deleted");
+            });
+            return state;
 
         default:
             return state;
