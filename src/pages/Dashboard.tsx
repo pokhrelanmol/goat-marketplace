@@ -1,7 +1,7 @@
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import React, { useEffect, useReducer, useState } from "react";
 import { useUser } from "../contexts/userContext";
-import { db } from "../firebase-config";
+import { db } from "../firebase.config";
 import uniqid from "uniqid";
 import Button from "../components/Button";
 import Logout from "../components/auth/Logout";

@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import GoatCard from "../components/cards/GoatCard";
 import Hero from "../components/layout/Hero";
 import { useUser } from "../contexts/userContext";
-import { auth, db } from "../firebase-config";
+import { auth, db } from "../firebase.config";
 import GoatDataServices from "../services/goats-services";
 export type GoatType = {
     contact: number;

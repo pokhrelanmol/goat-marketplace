@@ -1,5 +1,5 @@
-import React from "react";
 import { GoatType } from "../pages/Home";
+import uniqid from "uniqid";
 
 interface IInputProps<T> {
     register: T;
@@ -43,11 +43,13 @@ const Input = ({
                         (name) => name === defaultValue
                     )}
                 >
-                    <option value="" selected={true} disabled>
+                    <option value=" " selected disabled>
                         --select--
                     </option>
                     {selectOptions?.map((name, idx) => (
-                        <option value={name}>{name}</option>
+                        <option key={uniqid()} value={name}>
+                            {name}
+                        </option>
                     ))}
                 </select>
             ) : (

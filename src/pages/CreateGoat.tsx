@@ -133,11 +133,7 @@ const CreateGoat = () => {
                     >
                         Images
                     </label>
-                    <ImageUpload
-                        loading={loading}
-                        setValue={setValue}
-                        errors={errors}
-                    />
+                    <ImageUpload setValue={setValue} errors={errors} />
                 </div>
             </form>
             <div className="text-center my-5">

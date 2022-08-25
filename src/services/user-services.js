@@ -1,14 +1,8 @@
-import { db } from "../firebase-config";
+import { db } from "../firebase.config";
 import {
     collection,
-    getDocs,
-    getDoc,
     addDoc,
-    deleteDoc,
-    updateDoc,
-    doc,
-    query,
-    where,
+    
 } from "firebase/firestore";
 const userCollectionRef = collection(db, "users");
 class UserServices {

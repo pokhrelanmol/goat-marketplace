@@ -1,25 +1,14 @@
-import React, { useEffect, useState } from "react";
 import UserServices from "../../services/user-services";
-import {
-    GoogleAuthProvider,
-    signInWithPopup,
-    User,
-    UserCredential,
-} from "firebase/auth";
-import { auth } from "../../firebase-config";
-import { useNavigate } from "react-router-dom";
-import { useUser } from "../../contexts/userContext";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "../../firebase.config";
 import Button from "../Button";
-import userEvent from "@testing-library/user-event";
 const Login = () => {
-    const { user } = useUser();
     const loginWithGoogle = () => {
         signInWithPopup(auth, new GoogleAuthProvider())
             .then((userCred) => {
                 UserServices.addUser({
                     email: userCred.user.email,
                     name: userCred.user.displayName,
-                    id: userCred.user.uid,
                     image: userCred.user.photoURL,
                 }).then((user) => {
                     console.log(user);

@@ -1,31 +1,21 @@
-import React, { useEffect } from "react";
+import React from "react";
 import ImageUploading, { ImageListType } from "react-images-uploading";
 type ImageUploadProps = {
     setValue: any;
-    loading: boolean;
     errors: any;
-    defaultImages?: ImageListType;
 };
-export default function ImageUpload({
-    errors,
-    defaultImages,
-    setValue,
-    loading,
-}: ImageUploadProps) {
-    const [images, setImages] = React.useState(defaultImages!);
+export default function ImageUpload({ errors, setValue }: ImageUploadProps) {
+    const [images, setImages] = React.useState([]);
     const maxNumber = 69;
 
     const onChange = (
-        imageList: ImageListType,
-        addUpdateIndex: number[] | undefined
+        imageList: ImageListType
+        // addUpdateIndex: number[] | undefined
     ) => {
         setImages(imageList as never[]);
         setValue("images", imageList, { shouldValidate: true });
     };
-    useEffect(() => {
-        // @dev- checking if image is uploaded or not
-        if (!loading) setImages(defaultImages!);
-    }, [loading]);
+
     return (
         <div className="ImageUpload">
             <ImageUploading

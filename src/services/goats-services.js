@@ -1,8 +1,7 @@
-import { auth, db, storage } from "../firebase-config";
+import { auth, db, storage } from "../firebase.config";
 
 import {
     collection,
-    getDocs,
     getDoc,
     addDoc,
     deleteDoc,
@@ -13,12 +12,7 @@ import {
     onSnapshot,
 } from "firebase/firestore";
 
-import {
-    getDownloadURL,
-    ref,
-    uploadBytes,
-    uploadString,
-} from "firebase/storage";
+import { getDownloadURL, ref, uploadString } from "firebase/storage";
 
 const goatCollectionRef = collection(db, "goats");
 class GoatService {
@@ -60,9 +54,8 @@ class GoatService {
         onSnapshot(q, (snapshot) => {
             const goats = [];
             snapshot.docs.map((doc) => {
-                goats.push({ ...doc.data(), id: doc.id });
+                return goats.push({ ...doc.data(), id: doc.id });
             });
-            console.log(goats);
             return goats;
         });
     }

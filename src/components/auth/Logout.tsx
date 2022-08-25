@@ -1,11 +1,10 @@
 import { signOut } from "firebase/auth";
-import React from "react";
 import { useUser } from "../../contexts/userContext";
-import { auth } from "../../firebase-config";
+import { auth } from "../../firebase.config";
 import Button from "../Button";
 
 const Logout = () => {
-    const { user, setUser } = useUser();
+    const { setUser } = useUser();
     const logout = () => {
         signOut(auth)
             .then(() => {

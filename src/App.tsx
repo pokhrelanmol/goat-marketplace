@@ -1,16 +1,12 @@
-import React, { useState } from "react";
 import CreateGoat from "./pages/CreateGoat";
 import Home from "./pages/Home";
 import { Route, Routes } from "react-router-dom";
 import Navigation from "./components/layout/Navigation";
 import Dashboard from "./pages/Dashboard";
-import { useUser } from "./contexts/userContext";
-import _404 from "./pages/_404";
-import ImageUpload from "./components/ImageUpload";
-import { auth } from "./firebase-config";
+import NotFound from "./pages/NotFound";
+import { auth } from "./firebase.config";
 
 function App() {
-    const { user } = useUser();
     return (
         <div className="App max-w-6xl mx-auto">
             <Navigation />
@@ -21,9 +17,9 @@ function App() {
                     <Route path="/dashboard" element={<Dashboard />} />
                 )}
                 {/* 404 routes */}
-                <Route path="*" element={<_404 />} />
-                <Route path="" element={<_404 />} />
-                <Route element={<_404 />} />
+                <Route path="*" element={<NotFound />} />
+                <Route path="" element={<NotFound />} />
+                <Route element={<NotFound />} />
             </Routes>
         </div>
     );

@@ -5,7 +5,7 @@ import { AiOutlineMenu } from "react-icons/ai";
 import { MdKeyboardArrowDown, MdOutlineCancel } from "react-icons/md";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useUser } from "../../contexts/userContext";
-import { auth } from "../../firebase-config";
+import { auth } from "../../firebase.config";
 import Login from "../auth/Login";
 
 const Navlink = ({ to, text }: { to: string; text: string }) => {
