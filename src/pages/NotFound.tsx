@@ -5,40 +5,29 @@ import Button from "../components/Button";
 const NotFound = () => {
     const navigate = useNavigate();
     return (
-        <div>
-            <div className="bg-indigo-900 relative overflow-hidden h-screen">
-                   {" "}
-                <img
-                    src="https://external-preview.redd.it/4MddL-315mp40uH18BgGL2-5b6NIPHcDMBSWuN11ynM.jpg?width=960&crop=smart&auto=webp&s=b98d54a43b3dac555df398588a2c791e0f3076d9"
-                    className="absolute h-full w-full object-cover"
-                    alt="not found"
-                />
-                   {" "}
-                <div className="inset-0 bg-black opacity-25 absolute">    </div>
-                   {" "}
-                <div className="container mx-auto px-6 md:px-12 relative z-10 flex items-center py-32 xl:py-40">
-                           {" "}
-                    <div className="w-full font-mono flex flex-col items-center relative z-10">
-                                   {" "}
-                        <h1 className="font-extrabold text-5xl text-center text-white leading-tight mt-4">
-                              You are all alone here          {" "}
-                        </h1>
-                        <Button
-                            onClick={() => navigate("/")}
-                            buttonType="pink-outline"
-                        >
-                            Take Me Home
-                        </Button>
-                                   {" "}
-                        <p className="font-extrabold text-8xl my-44 text-white animate-bounce">
-                                            404            {" "}
-                        </p>
-                               {" "}
-                    </div>
-                       {" "}
+        <section className="flex items-center h-full p-16 dark:bg-gray-900 dark:text-gray-100">
+            <div className="container flex flex-col items-center justify-center px-5 mx-auto my-8">
+                <div className="max-w-md text-center">
+                    <h2 className="mb-8 font-extrabold text-9xl dark:text-gray-600">
+                        <span className="sr-only">Error</span>404
+                    </h2>
+                    <p className="text-2xl font-semibold md:text-3xl">
+                        Sorry, we couldn't find this page.
+                    </p>
+                    <p className="mt-4 mb-8 dark:text-gray-400">
+                        But dont worry, you can find plenty of other things on
+                        our homepage.
+                    </p>
+                    <Button
+                        type="button"
+                        buttonType="pink-outline"
+                        onClick={() => navigate("/")}
+                    >
+                        Back to homepage
+                    </Button>
                 </div>
             </div>
-        </div>
+        </section>
     );
 };
 

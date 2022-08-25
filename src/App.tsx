@@ -4,16 +4,17 @@ import { Route, Routes } from "react-router-dom";
 import Navigation from "./components/layout/Navigation";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
-import { auth } from "./firebase.config";
+import { useUser } from "./contexts/userContext";
 
 function App() {
+    const { user } = useUser();
     return (
         <div className="App max-w-6xl mx-auto">
             <Navigation />
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/list-goat" element={<CreateGoat />} />
-                {auth.currentUser && (
+                {user.email && (
                     <Route path="/dashboard" element={<Dashboard />} />
                 )}
                 {/* 404 routes */}

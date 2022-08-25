@@ -74,26 +74,30 @@ const Dashboard = () => {
                 </div>
             </section>
             {/* user listed goats */}
-            <section className="max-h-screen md:overflow-hidden overflow-auto md:hover:overflow-auto ">
+            <section className="max-h-screen md:overflow-hidden  overflow-auto md:hover:overflow-auto ">
                 {state.loading && <CircularLoader />}
                 <div className="grid md:grid-cols-2 justify-center items-center lg:grid-cols-3 gap-10 ">
                     {/* return goat component passing props and with optional chainining */}
-                    {state?.goats?.length
-                        ? state.goats.map((goat) => (
-                              <UserGoatsCard
-                                  contact={goat.contact}
-                                  location={goat.location}
-                                  type={goat.type}
-                                  images={goat.images}
-                                  id={goat.id}
-                                  price={goat.price}
-                                  weight={goat.weight}
-                                  key={uniqid()}
-                                  handleDelete={() => handleDelete(goat.id)}
-                                  handleEdit={() => handleEdit(goat.id)}
-                              />
-                          ))
-                        : null}
+                    {state.goats?.length ? (
+                        state.goats.map((goat) => (
+                            <UserGoatsCard
+                                contact={goat.contact}
+                                location={goat.location}
+                                type={goat.type}
+                                images={goat.images}
+                                id={goat.id}
+                                price={goat.price}
+                                weight={goat.weight}
+                                key={uniqid()}
+                                handleDelete={() => handleDelete(goat.id)}
+                                handleEdit={() => handleEdit(goat.id)}
+                            />
+                        ))
+                    ) : (
+                        <div className="text-2xl grid place-content-center font-bold text-center text-primaryDark">
+                            No Goats Created
+                        </div>
+                    )}
                 </div>
             </section>
         </div>

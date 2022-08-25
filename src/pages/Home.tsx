@@ -27,7 +27,7 @@ const Home = () => {
     const [goats, setGoats] = useState<GoatType[]>([]);
     useEffect(() => {
         fetchAllGoats();
-    }, []);
+    }, [user.id]);
     //@dev:gettting all the goats from the database
     // @dev :onSnapshot is a listener that will listen to the database and update the state whenever there is a change
     const goatCollectionRef = collection(db, "goats");
