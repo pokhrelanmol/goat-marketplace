@@ -89,7 +89,7 @@ const EditGoatModal = ({ showModal, setShowModal }: EditModalProps) => {
                                         shouldValidate: true,
                                     })
                                 }
-                                defaultValue={state.goatToEdit.type}
+                                // defaultValue={state.goatToEdit.type}
                             />
                             <Input
                                 type="number"

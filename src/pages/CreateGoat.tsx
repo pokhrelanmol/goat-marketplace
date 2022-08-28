@@ -7,6 +7,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import ImageUpload from "../components/ImageUpload";
+import { useToast } from "../contexts/ToastContext";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export interface IForm {
     type: string;
@@ -27,6 +29,7 @@ export const scheme = yup.object().shape({
         .max(20, "Type must be less than 20 characters"),
     weight: yup
         .number()
+        .typeError("Weight is not a number")
         .required("Weight is required")
         .min(5, "Weight must be at least 5"),
     location: yup
@@ -46,6 +49,7 @@ export const scheme = yup.object().shape({
 
 const CreateGoat = () => {
     const { user } = useUser();
+    const { setToast } = useToast();
     const [loading, setLoading] = useState(false);
     const {
         register,
@@ -53,15 +57,24 @@ const CreateGoat = () => {
         reset,
         setValue,
         handleSubmit,
+        watch,
     } = useForm<IForm>({ resolver: yupResolver(scheme), mode: "onBlur" });
-
+    const navigate = useNavigate();
+    const selectInput = watch("type");
     const onSumbit = (data: IForm) => {
         setLoading(true);
         GoatDataServices.uploadImagesBase64(data.images).then((res) => {
             const newData = { ...data, images: res, userId: user.id };
             GoatDataServices.addGoat(newData);
             reset();
+            setValue("images", []);
             setLoading(false);
+            navigate("/");
+            setToast({
+                type: "success",
+                msg: "Goat added successfully",
+                show: true,
+            });
         });
     };
 
@@ -80,6 +93,7 @@ const CreateGoat = () => {
                     name="type"
                     label="Type"
                     register={register}
+                    selectValue={selectInput}
                     errors={errors}
                     selectOptions={["Khasi", "Boka", "Baili", "Mou", "Pathi"]}
                     placeholder="Type"

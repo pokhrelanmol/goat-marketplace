@@ -5,12 +5,14 @@ import Navigation from "./components/layout/Navigation";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import { useUser } from "./contexts/userContext";
+import Toast from "./components/Toast";
 
 function App() {
     const { user } = useUser();
     return (
         <div className="App max-w-6xl mx-auto">
             <Navigation />
+            <Toast />
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/list-goat" element={<CreateGoat />} />

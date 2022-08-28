@@ -12,6 +12,7 @@ interface IInputProps<T> {
     defaultValue?: string | number;
     selectOptions?: Array<string | number>;
     onChange?: T;
+    selectValue?: string | number;
 }
 const Input = ({
     register,
@@ -22,7 +23,7 @@ const Input = ({
     selectOptions,
     label,
     onChange,
-    value,
+    selectValue,
     defaultValue,
 }: IInputProps<any>) => {
     return (
@@ -38,12 +39,11 @@ const Input = ({
                     className="dropdown"
                     onChange={onChange}
                     name={name}
-                    {...(register(name), { required: true })}
-                    defaultValue={selectOptions?.find(
-                        (name) => name === defaultValue
-                    )}
+                    value={selectValue}
+                    // {...(register(name), { required: true })}
+                    defaultValue={defaultValue}
                 >
-                    <option value=" " selected disabled>
+                    <option value="" selected disabled>
                         --select--
                     </option>
                     {selectOptions?.map((name, idx) => (
@@ -55,7 +55,6 @@ const Input = ({
             ) : (
                 <input
                     {...register(name)}
-                    value={value?.weight || register.value}
                     type={type}
                     className="inputField"
                     placeholder={placeholder}

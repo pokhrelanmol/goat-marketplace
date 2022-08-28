@@ -1,5 +1,5 @@
 import { auth, db, storage } from "../firebase.config";
-
+import uniqid from "uniqid";
 import {
     collection,
     getDoc,
@@ -63,8 +63,7 @@ class GoatService {
     async uploadImagesBase64(images) {
         let urls = [];
         for (let image of images) {
-            console.log(image);
-            const imageRef = ref(storage, `images/${image.name}`);
+            const imageRef = ref(storage, `images/${image.name}${uniqid()}`);
             const snapshot = await uploadString(
                 imageRef,
                 image.dataURL,
