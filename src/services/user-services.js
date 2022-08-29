@@ -6,18 +6,13 @@ import {
     getDoc,
     query,
     where,
+    getDocs,
 } from "firebase/firestore";
 const userCollectionRef = collection(db, "users");
 class UserServices {
-    checkIfUserExists(id) {
-        query(userCollectionRef, where("id", "==", id)).onSnapshot(
-            (snapshot) => {
-                if (snapshot.empty) {
-                    return false;
-                }
-                return true;
-            }
-        );
+    async checkIfUserExists(id) {
+        const q = query(userCollectionRef, where("id", "==", id));
+        return getDocs(q);
     }
     addUser(newUser) {
         return addDoc(userCollectionRef, newUser);

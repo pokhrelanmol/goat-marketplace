@@ -69,7 +69,7 @@ const CreateGoat = () => {
             reset();
             setValue("images", []);
             setLoading(false);
-            navigate("/");
+            navigate("/dashboard");
             setToast({
                 type: "success",
                 msg: "Goat added successfully",

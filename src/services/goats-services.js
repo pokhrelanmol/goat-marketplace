@@ -29,36 +29,11 @@ class GoatService {
         const goatDoc = doc(db, "goats", id);
         return updateDoc(goatDoc, updatedDoc);
     }
-    getGoats() {
-        const allGoats = onSnapshot(query(goatCollectionRef), (snapshot) => {
-            const data = snapshot.docs.map((doc) => ({
-                ...doc.data(),
-                id: doc.id,
-            }));
-
-            console.log(data);
-            return data;
-        });
-        return allGoats;
-    }
     getGoat(id) {
         const goatDoc = doc(db, "goats", id);
         return getDoc(goatDoc);
     }
-    getUserGoats() {
-        const userId = auth.currentUser.uid;
-        const q = query(
-            collection(db, "goats"),
-            where("userId", "==", `${userId}`)
-        );
-        onSnapshot(q, (snapshot) => {
-            const goats = [];
-            snapshot.docs.map((doc) => {
-                return goats.push({ ...doc.data(), id: doc.id });
-            });
-            return goats;
-        });
-    }
+
     // upload image base64 string to firebase storage and return download url
     async uploadImagesBase64(images) {
         let urls = [];

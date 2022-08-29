@@ -14,16 +14,14 @@ const Toast = () => {
             : "bg-blue-500";
 
     useEffect(() => {
-        console.log(toast);
         setTimeout(() => {
             setToast({ msg: "", show: false });
         }, 3000);
     }, [toast.show, toast.msg]);
-    console.log("toast component");
     if (toast.show) {
         return (
             <div
-                className={`z-10 min-w-max  flex items-center gap-10 justify-between fixed py-3 px-5 rounded-lg shadow-lg left-1/2 -translate-x-1/2 bottom-12 ${bgColor}`}
+                className={`z-10 text-white min-w-max  flex items-center gap-10 justify-between fixed py-3 px-5 rounded-lg shadow-lg left-1/2 -translate-x-1/2 bottom-12 ${bgColor}`}
             >
                 {toast.msg}
                 <MdCancel
